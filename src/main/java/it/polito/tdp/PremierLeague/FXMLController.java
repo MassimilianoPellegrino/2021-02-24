@@ -47,16 +47,41 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	this.txtResult.clear();
+    	Match match;
+    	try {
+    		match = cmbMatch.getValue();
+    		this.txtResult.appendText(model.creaGrafo(match)+"\n");
+    	}catch(NullPointerException e) {
+    		this.txtResult.appendText("Selezionare una partita per creare il grafo");
+    	}
     }
 
     @FXML
     void doGiocatoreMigliore(ActionEvent event) {    	
-    	
+    	this.txtResult.clear();
+    	try {
+    		this.txtResult.appendText(String.format(model.getBestPlayer()+" - efficienza: %.3f\n", model.getBestDelta()));
+    	}catch(NullPointerException e){
+    		this.txtResult.appendText("Selezionare una partita per trovarne il giocatore migliore");
+    	}
+
     }
     
     @FXML
     void doSimula(ActionEvent event) {
+    	this.txtResult.clear();
+    	Match m;
+    	int n;
+    	try {
+    		n = Integer.parseInt(this.txtN.getText());
+    		m = cmbMatch.getValue();
+    		this.txtResult.appendText(model.simula(n, m));
+    	}catch(NullPointerException e) {
+    		this.txtResult.appendText("Selezionare una partita da simulare");
+    	}catch(NumberFormatException e) {
+    		txtResult.appendText("Inserire un numero intero");
+    	}
 
     }
 
@@ -73,5 +98,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.cmbMatch.getItems().addAll(model.listAllMatches());
     }
 }
